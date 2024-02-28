@@ -24,7 +24,7 @@ const options = {
                 description: "Local server"
             },
             {
-                url: "<your live url here>",
+                url: "https://sda-hymns-node.onrender.com/",
                 description: "Live server"
             },
         ]
