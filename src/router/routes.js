@@ -1,27 +1,80 @@
 const express = require('express');
-const Hymn = require('./hymn');
+const Hymn = require('../schema/hymn');
 
 const router = express.Router();
 
-// Create a new hymn
-router.post('/hymns', async (req, res) => {
+/**
+ * @swagger
+ * /api/hymns:
+ *   post:
+ *     tags:
+ *       - Hymn Controller
+ *     summary: Create a new hymn
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - number
+ *               - title
+ *               - hymnContent
+ *             properties:
+ *               number:
+ *                 type: number
+ *               title:
+ *                 type: string
+ *               hymnContent:
+ *                 type: array
+ *     responses:
+ *       201:
+ *         description: Created
+ *       400:
+ *         description: Bad Request
+ *       409:
+ *         description: Conflict
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Server Error
+ */
+router.post('/api/hymns', async (req, res) => {
   const { number, title, hymnContent } = req.body;
 
   try {
     const hymn = new Hymn({ number, title, hymnContent });
     await hymn.save();
-    res.send(hymn);
+    res.status(201).send(hymn);
   } catch (error) {
     console.error(error);
     res.status(500).send(error);
   }
 });
 
-// Get all hymns
-router.get('/hymns', async (req, res) => {
+/**
+ * @swagger
+ * /api/hymns:
+ *   get:
+ *     tags:
+ *       - Hymn Controller
+ *     summary: Get all hymns
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Bad Request
+ *       409:
+ *         description: Conflict
+ *       404:
+ *         description: Not Found
+ *       500:
+ *         description: Server Error
+ */
+router.get('/api/hymns', async (req, res) => {
   try {
     const hymns = await Hymn.find({});
-    res.send(hymns);
+    res.status(200).send(hymns);
   } catch (error) {
     console.error(error);
     res.status(500).send(error);
