@@ -3,8 +3,11 @@ const bodyParser = require('body-parser');
 const db = require('./config/db');
 const routes = require('./router/routes');
 const swaggerDocs = require('./config/swagger')
+const cors = require('cors');
 
 const app = express();
+
+app.use(cors());
 
 app.disable('x-powered-by');
 app.use(bodyParser.json());

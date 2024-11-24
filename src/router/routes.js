@@ -87,7 +87,7 @@ const router = express.Router();
  *   post:
  *     tags:
  *       - HymnController
- *     summary: Create a new hymn
+ *     summary: Add a new hymn
  *     requestBody:
  *       required: true
  *       content:
@@ -96,7 +96,7 @@ const router = express.Router();
  *             $ref: '#/components/schemas/Hymn'
  *     responses:
  *       201:
- *         description: Hymn Created
+ *         description: Hymn Added
  *         content:
  *           application/json:
  *             schema:
@@ -124,16 +124,16 @@ const router = express.Router();
  *                       type: number
  */
 router.post('/api/hymns', async (req, res) => {
-  const { number, title, hymnContent } = req.body;
+    const {number, title, hymnContent} = req.body;
 
-  try {
-    const hymn = new Hymn({ number, title, hymnContent });
-    await hymn.save();
-    res.status(201).send(hymn);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send(error);
-  }
+    try {
+        const hymn = new Hymn({number, title, hymnContent});
+        await hymn.save();
+        res.status(201).send(hymn);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
 });
 
 /**
@@ -154,13 +154,13 @@ router.post('/api/hymns', async (req, res) => {
  *                 $ref: '#/components/schemas/HymnResponse'
  */
 router.get('/api/hymns', async (req, res) => {
-  try {
-    const hymns = await Hymn.find({});
-    res.status(200).send(hymns);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send(error);
-  }
+    try {
+        const hymns = await Hymn.find({});
+        res.status(200).send(hymns);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
 });
 
 /**
@@ -188,16 +188,16 @@ router.get('/api/hymns', async (req, res) => {
  *         description: Hymn Not Found
  */
 router.get('/api/hymns/:number', async (req, res) => {
-  const { number } = req.params;
+    const {number} = req.params;
 
-  try {
-    const filter = { number: number };
-    const hymns = await Hymn.find(filter);
-    res.status(200).send(hymns);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send(error);
-  }
+    try {
+        const filter = {number: number};
+        const hymns = await Hymn.find(filter);
+        res.status(200).send(hymns);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
 });
 
 /**
@@ -225,15 +225,20 @@ router.get('/api/hymns/:number', async (req, res) => {
  *                 $ref: '#/components/schemas/HymnResponse'
  */
 router.get('/api/hymns/search/:searchTerm', async (req, res) => {
-  const { searchTerm } = req.params;
+    const {searchTerm} = req.params;
 
-  try {
-    const hymns = await Hymn.find({ $text: { $search: searchTerm } });
-    res.status(200).send(hymns);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send(error);
-  }
+    try {
+        let hymns;
+        if (isNaN(searchTerm)) {
+            hymns = await Hymn.find({$text: {$search: searchTerm}});
+        } else {
+            hymns = await Hymn.find({number: searchTerm});
+        }
+        res.status(200).send(hymns);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
 });
 
 /**
@@ -259,17 +264,17 @@ router.get('/api/hymns/search/:searchTerm', async (req, res) => {
  *               $ref: '#/components/schemas/HymnResponse'
  */
 router.put('/api/hymns/:number', async (req, res) => {
-  const { number } = req.params;
-  const { title, hymnContent } = req.body;
+    const {number} = req.params;
+    const {title, hymnContent} = req.body;
 
-  try {
-    const filter = { number: number };
-    const hymn = await Hymn.findOneAndUpdate(filter, { title, hymnContent }, { new: true });
-    res.status(200).send(hymn);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send(error);
-  }
+    try {
+        const filter = {number: number};
+        const hymn = await Hymn.findOneAndUpdate(filter, {title, hymnContent}, {new: true});
+        res.status(200).send(hymn);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
 });
 
 /**
@@ -295,19 +300,17 @@ router.put('/api/hymns/:number', async (req, res) => {
  *               $ref: '#/components/schemas/HymnResponse'
  */
 router.delete('/api/hymns/:number', async (req, res) => {
-  const { number } = req.params;
+    const {number} = req.params;
 
-  try {
-    const filter = { number: number };
-    const hymn = await Hymn.findOneAndDelete(filter);
-    res.status(200).send(hymn);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send(error);
-  }
+    try {
+        const filter = {number: number};
+        const hymn = await Hymn.findOneAndDelete(filter);
+        res.status(200).send(hymn);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
 });
-
-
 
 /**
  * @swagger
@@ -332,16 +335,16 @@ router.delete('/api/hymns/:number', async (req, res) => {
  *               $ref: '#/components/schemas/HymnResponse'
  */
 router.delete('/api/hymns/by-id/:id', async (req, res) => {
-  const { id } = req.params;
+    const {id} = req.params;
 
-  try {
-    const filter = { _id: id };
-    const hymn = await Hymn.findOneAndDelete(filter);
-    res.status(200).send(hymn);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send(error);
-  }
+    try {
+        const filter = {_id: id};
+        const hymn = await Hymn.findOneAndDelete(filter);
+        res.status(200).send(hymn);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
 });
 
 module.exports = router;
