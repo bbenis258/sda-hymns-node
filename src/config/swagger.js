@@ -17,17 +17,7 @@ const options = {
                 url: "https://github.com/bbenis258/sda-hymns-node"
             },
             version: '1.0.0',
-        },
-        servers: [
-            {
-                url: "http://localhost:15500/",
-                description: "Local server"
-            },
-            {
-                url: "https://sda-hymns-node.onrender.com/",
-                description: "Live server"
-            },
-        ]
+        }
     },
     apis: ['./src/router/*.js'],
 }
