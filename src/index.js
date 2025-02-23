@@ -12,6 +12,8 @@ app.use(cors());
 app.disable('x-powered-by');
 app.use(bodyParser.json());
 
+swaggerDocs(app);
+
 app.use('/', routes);
 
 const port = 15500;
@@ -19,5 +21,3 @@ const port = 15500;
 app.listen(port, () => {
   console.log('Server started on port 15500');
 });
-
-swaggerDocs(app, port);

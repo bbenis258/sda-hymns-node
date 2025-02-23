@@ -165,6 +165,35 @@ router.get('/api/hymns', async (req, res) => {
 
 /**
  * @swagger
+ * /api/hymns/count:
+ *   get:
+ *     tags:
+ *       - HymnController
+ *     summary: Get count of all hymns
+ *     responses:
+ *       200:
+ *         description: Hymns Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 hymns:
+ *                   type: number
+ *                   example: 10
+ */
+router.get('/api/hymns/count', async (req, res) => {
+    try {
+        const hymns = await Hymn.countDocuments({}).exec();
+        res.status(200).json({hymns: hymns});
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(error);
+    }
+});
+
+/**
+ * @swagger
  * /api/hymns/{number}:
  *   get:
  *     tags:
